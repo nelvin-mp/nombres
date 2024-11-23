@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consejo Aleatorio</title>
+    <style>
+        /* Estilo de la página */
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #FFDEE9 0%, #B5FFFC 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        /* Contenedor principal */
+        .container {
+            width: 320px;
+            padding: 30px;
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Estilo del título */
+        h2 {
+            font-size: 22px;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        /* Campo de entrada */
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            font-size: 14px;
+            border-radius: 25px;
+            border: 1px solid #ddd;
+            outline: none;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        /* Botón */
+        button {
+            margin-top: 15px;
+            padding: 10px 20px;
+            background-color: #14c70e;
+            color: #ffffff;
+            font-weight: bold;
+            font-size: 16px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #3400b9;
+        }
+
+        /* Estilo de salida */
+        .output {
+            margin-top: 20px;
+            font-weight: bold;
+            color: #FFFFFF;
+            font-size: 16px;
+            background-color: #000000; /* Azul brillante */
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px #030405;
+            animation: pulse 1s infinite; /* Efecto de animación de pulso */
+            display: none; /* Inicialmente oculto */
+        }
+
+        /* Animación de estrellas */
+        .star {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            background: yellow;
+            box-shadow: 0 0 10px yellow;
+            border-radius: 50%;
+            animation: twinkle 1s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        /* Animación para que las letras brillen mientras se escriben */
+        input:focus {
+            box-shadow: 0 0 10px #FF69B4, 0 0 20px #FF1493, 0 0 30px #FF69B4;
+            outline: none;
+        }
+
+        /* Definición de la animación de las estrellas */
+        @keyframes twinkle {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
+        }
+
+        /* Animación de brillo en el texto de salida */
+        @keyframes pulse {
+            0% { color: #1E90FF; }
+            50% { color: #87CEEB; }
+            100% { color: #1E90FF; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Consejo Aleatorio</h2>
+        <input type="text" id="nombre" placeholder="Ingresa tu nombre" required>
+        <button onclick="mostrarConsejoAleatorio()">Mostrar Consejo</button>
+        <div class="output" id="output"></div>
+    </div>
+
+    <script>
+        // Lista de consejos
+        const consejos = [
+            "La constancia es la clave para lograr tus metas.",
+            "No dejes que el miedo te detenga, avanza siempre.",
+            "Cada pequeño paso te acerca a tu objetivo.",
+            "La actitud positiva es esencial para el éxito.",
+            "El fracaso es solo una oportunidad para comenzar de nuevo.",
+            "Recuerda siempre cuidar tu salud mental.",
+            "Tómate tiempo para reflexionar y aprender de tus errores.",
+            "Sé agradecido por todo lo que tienes en la vida.",
+            "Nunca dudes de tu capacidad para alcanzar lo que deseas.",
+            "La paciencia es un arte que debes aprender a dominar.",
+            "No te compares con los demás, sigue tu propio camino.",
+            "La clave para mejorar siempre está en tu perseverancia.",
+            "El cambio empieza con un solo paso, no lo dudes.",
+            "La vida es una oportunidad, no la desperdicies.",
+            "Busca siempre el aprendizaje en cada experiencia.",
+            "Sé valiente para enfrentar tus desafíos.",
+            "Tu actitud define tu destino.",
+            "Cada día es una nueva oportunidad para mejorar.",
+            "No te rindas, lo que deseas está más cerca de lo que piensas.",
+            "Elige hacer lo que te apasiona, no lo que los demás esperan.",
+            "La constancia es la clave para lograr tus metas.",
+            "No dejes que el miedo te detenga, avanza siempre.",
+            "Cada pequeño paso te acerca a tu objetivo.",
+            "La actitud positiva es esencial para el éxito.",
+            "El fracaso es solo una oportunidad para comenzar de nuevo.",
+            "Recuerda siempre cuidar tu salud mental.",
+            "Tómate tiempo para reflexionar y aprender de tus errores.",
+            "Sé agradecido por todo lo que tienes en la vida.",
+            "Nunca dudes de tu capacidad para alcanzar lo que deseas.",
+            "La paciencia es un arte que debes aprender a dominar.",
+            "No te compares con los demás, sigue tu propio camino.",
+            "La clave para mejorar siempre está en tu perseverancia.",
+            "El cambio empieza con un solo paso, no lo dudes.",
+            "La vida es una oportunidad, no la desperdicies.",
+            "Busca siempre el aprendizaje en cada experiencia.",
+            "Sé valiente para enfrentar tus desafíos.",
+            "Tu actitud define tu destino.",
+            "Cada día es una nueva oportunidad para mejorar.",
+            "No te rindas, lo que deseas está más cerca de lo que piensas.",
+            "Elige hacer lo que te apasiona, no lo que los demás esperan.",
+            "El conocimiento es el poder que te llevará lejos.",
+            "Haz lo que amas y nunca trabajarás un solo día en tu vida.",
+            "La verdadera felicidad viene de ser fiel a uno mismo.",
+            "No dejes que las opiniones ajenas te desvíen de tu camino.",
+            "Haz que tu vida sea una obra maestra, no una rutina.",
+            "La humildad es la base de todo aprendizaje.",
+            "Cuando te caigas, levántate más fuerte.",
+            "Cada error es una lección que te lleva más cerca del éxito.",
+            "Las personas exitosas no son las que nunca fallan, sino las que nunca se rinden.",
+            "Si puedes soñarlo, puedes lograrlo.",
+            "Tú tienes el poder de cambiar tu vida en cualquier momento.",
+            "La vida es demasiado corta para vivirla en la sombra de otros.",
+            "Lo único que te limita es tu propia mente.",
+            "No te detengas hasta estar orgulloso de ti mismo.",
+            "Cada nuevo día es una página en blanco en tu historia.",
+            "Nunca es tarde para empezar de nuevo.",
+            "Escucha más a menudo a los que te rodean, ya que muchas veces te dan consejos sabios.",
+            "Recuerda que los grandes logros comienzan con un solo paso.",
+            "No tengas miedo de brillar, el mundo necesita tu luz.",
+            "Tu actitud puede convertir un día ordinario en algo extraordinario.",
+            "Cree en ti mismo y todo será posible.",
+            "Siempre es el momento adecuado para hacer lo correcto.",
+            "El éxito no se mide por lo que logras, sino por los obstáculos que superas.",
+            "Sigue adelante, incluso cuando todo parece difícil.",
+            "La vida no siempre es fácil, pero cada desafío es una oportunidad de crecer.",
+            "La verdadera fortaleza no es la ausencia de miedo, sino la capacidad de enfrentarlo.",
+            "No busques la perfección, busca el progreso.",
+            "Lo que hoy te parece imposible, mañana será solo un recuerdo.",
+            "El mejor momento para plantar un árbol fue hace 20 años, el segundo mejor es hoy.",
+            "No subestimes el poder de los pequeños cambios.",
+            "No esperes que las oportunidades lleguen, ve a buscarlas.",
+            "La mente es como un paracaídas, solo funciona si se abre.",
+            "Haz que cada día cuente, el futuro se construye hoy.",
+            "Si puedes pensar en ello, puedes lograrlo.",
+            "Nunca subestimes el poder de una actitud positiva.",
+            "La perseverancia es la clave que abre las puertas del éxito.",
+            "No pienses en lo que no tienes, agradece lo que has logrado.",
+            "El único modo de hacer un gran trabajo es amar lo que haces.",
+            "Los sueños no funcionan a menos que tú trabajes por ellos.",
+            "Haz lo que puedas, con lo que tengas, donde estés.",
+            "La vida es un reflejo de tus pensamientos.",
+            "La felicidad no es algo hecho. Viene de tus propias acciones.",
+            "El único límite que tienes es el que te pones a ti mismo.",
+            "Cada día es una nueva oportunidad para hacer algo grande.",
+            "A veces, la mejor forma de avanzar es dar un paso atrás.",
+            "Nunca se es demasiado viejo para tener un nuevo sueño.",
+            "Lo único imposible es aquello que no intentas.",
+            "Recuerda que cada desafío es una oportunidad de aprendizaje.",
+            "La gratitud transforma lo que tenemos en suficiente.",
+            "Los errores son solo oportunidades para crecer.",
+            "La confianza en uno mismo es la clave para conquistar el mundo.",
+            "La única forma de predecir el futuro es crearlo.",
+            "Aprende a disfrutar del proceso, no solo del resultado.",
+            "Haz que lo imposible sea posible, esa es la verdadera grandeza.",
+            "La fe en ti mismo es el primer paso hacia el éxito.",
+            "La vida es como un espejo, sonríe y te devolverá la sonrisa.",
+            "El éxito no es el final, es solo el comienzo de algo aún más grande.",
+            "No te preocupes por las dificultades, cada una tiene una lección que enseñarte.",
+            "La pasión es el motor que te llevará a la cima.",
+            "El tiempo es valioso, no lo desperdicies en lo que no importa.",
+            "Cada día es una oportunidad para empezar de nuevo.",
+            "Los que no arriesgan, no ganan.",
+            "Lo único que necesitas para tener éxito es ser valiente.",
+            "El éxito llega cuando la preparación y la oportunidad se encuentran.",
+            "Cree en ti mismo y todo lo demás caerá en su lugar.",
+            "Cada día es una nueva oportunidad para ser mejor.",
+            "La persistencia siempre vence al talento.",
+            "No te preocupes por lo que no puedes controlar, enfócate en lo que sí puedes.",
+            "El camino hacia el éxito está lleno de desafíos, pero son esos desafíos los que te hacen más fuerte.",
+            "A veces, el mayor riesgo es no arriesgarse.",
+            "La acción es la clave para hacer realidad tus sueños.",
+            "La vida no se trata de encontrar a uno mismo, sino de crearse a uno mismo.",
+            "Las oportunidades no ocurren, las creas tú.",
+            "El éxito se construye paso a paso, no de la noche a la mañana.",
+            "La mente positiva es la semilla de todo logro.",
+            "No te limites, el mundo es tuyo para conquistarlo.",
+            "No importa cuántas veces caigas, lo importante es levantarse siempre.",
+            "El futuro pertenece a aquellos que creen en la belleza de sus sueños.",
+            "La disciplina es el puente entre tus metas y tu éxito.",
+            "Los desafíos son lo que hacen la vida interesante; superarlos es lo que le da significado."
+        ];
+           
+        
+
+        // Función para mostrar el consejo aleatorio
+        function mostrarConsejoAleatorio() {
+            const outputDiv = document.getElementById('output');
+            const randomIndex = Math.floor(Math.random() * consejos.length);
+            const consejo = consejos[randomIndex];
+
+            // Verificar si el campo de texto está vacío
+            const nombre = document.getElementById('nombre').value.trim();
+            if (nombre === "") {
+                alert("Por favor, ingresa tu nombre.");
+                return; // No hacer nada si el campo está vacío
+            }
+
+            // Mostrar el consejo en el cuadro de salida
+            outputDiv.textContent = `Hola ${nombre}, tu consejo es: ${consejo}`;
+            outputDiv.style.display = "block"; // Mostrar el consejo
+
+            // Animación de pulso al aparecer el consejo
+            outputDiv.classList.add('pulse');
+        }
+    </script>
+</body>
+</html>
